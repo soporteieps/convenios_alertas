@@ -1,0 +1,48 @@
+header{
+	text-align: center;
+}
+
+table, th, td, tr
+{
+	border: 1px solid black;
+}
+
+th
+{
+	text-align: center;
+}
+
+table
+{
+	border-collapse: collapse;
+	width: 100%;
+}
+
+
+
+#alertar,
+#controles,
+#divConsulta,
+#divIngreso{
+	text-align: center;
+}
+
+#alertar{
+	padding: 10px;
+}
+
+#btAlertar{
+	font-size: 33px;
+	background: red;
+	border: 1px solid black;
+	border-radius: 4px;
+}
+
+#divConsulta,
+#divIngreso{
+	display: none;
+}
+
+#actividad{
+	width: 80%;
+}
