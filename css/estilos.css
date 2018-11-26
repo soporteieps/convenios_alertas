@@ -1,5 +1,24 @@
+body
+{
+	background: url(../img/background.png) no-repeat center center fixed;   
+	background-size: cover;
+	font-family: 'Niramit', sans-serif;
+}
+
 header{
 	text-align: center;
+	position: relative;
+	width: 100%;
+}
+
+header img
+{
+	position: absolute;
+	top: 10px;
+	right: 0;
+	left: 2px;
+	bottom: 0;
+	width: 241px;
 }
 
 table, th, td, tr
@@ -45,4 +64,72 @@ table
 
 #actividad{
 	width: 80%;
+}
+
+#popup
+{
+	visibility: hidden;
+	opacity: 0;
+	margin-top: -300px;
+}
+
+#popup:target
+{
+	visibility: visible;
+	opacity: 1;
+	background-color: rgba(0, 0, 0, 0.8);
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: 0;
+	z-index: 999;
+	transition: all 1s;
+}
+
+.popup-contenedor
+{
+	margin: 7% auto;
+	padding: 30px 50px;
+	position: relative;
+	background-color: #fafafa;
+	color: #333;
+	border-radius: 3px;
+	width: 50%;
+}
+
+a.popup-cerrar
+{
+	position: absolute;
+	top: 3px;
+	right: 3px;
+	background-color: #fafafa;
+	padding: 7px 10px;
+	font-size: 20px;
+	text-decoration: none;
+	line-height: 1;
+	color: #000;
+}
+
+a button
+{
+	width: 100%;
+    font-size: 10px;
+    color: white;
+    background-color: #3857deb3;
+    border-radius: 3px;
+    box-shadow: 0.5px 1px #000;
+    border: 0;
+    padding: 2px 0;
+}
+
+#textoObservacion
+{
+	width: 100%;
+}
+
+#actividadModificar
+{
+	display: none;
 }

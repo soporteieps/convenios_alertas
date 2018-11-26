@@ -41,35 +41,39 @@ function enviarMail(){
 	{
 		array_push($arrayDepartamentos, $filaDepartamento['iddepartamento']);
 	}
-	$arrayInfoJefes = array();
+	// $arrayInfoJefes = array();
+	// foreach ($arrayDepartamentos as $valor) 
+	// {
+	// 	$sqlJefes = "select nombre, apellido, correo from persona where perfil = 1 and iddepartamento = ". $valor;
+	// 	$resJefes = query($sqlJefes);
+	// 	while($filaJefes = mysql_fetch_array($resJefes))
+	// 	{
+	// 		array_push($arrayInfoJefes, $valor);
+	// 		array_push($arrayInfoJefes, $filaJefes['apellido'] . " " . $filaJefes['nombre']);
+	// 		array_push($arrayInfoJefes, $filaJefes['correo']);
+	// 	}
+	// }
+
+	// // print_r($arrayInfoJefes);
+
+	// $tamInfoJefes = count($arrayInfoJefes);
+	
 	foreach ($arrayDepartamentos as $valor) 
 	{
-		$sqlJefes = "select nombre, apellido, correo from persona where perfil = 1 and iddepartamento = ". $valor;
-		$resJefes = query($sqlJefes);
-		while($filaJefes = mysql_fetch_array($resJefes))
-		{
-			array_push($arrayInfoJefes, $valor);
-			array_push($arrayInfoJefes, $filaJefes['apellido'] . " " . $filaJefes['nombre']);
-			array_push($arrayInfoJefes, $filaJefes['correo']);
-		}
-	}
+		$message = '<html><body><h2>ALERTA DE ACTIVIDADES EN SU DEPARTAMENTO</h2>';	
+		$message .= '<table border="0" cellpadding="20" cellspacing="0" width="1200" id="emailContainer" style=style="border: 1px solid black;">';
+		$message .= '<tr>
+						<td style="border: 1px solid black;">Indice</td>
+						<td style="border: 1px solid black;">Responsable</td>
+						<td style="border: 1px solid black;">Correo</td>
+						<td style="border: 1px solid black;">Actividad</td>
+						<td style="border: 1px solid black;">Fecha Limite</td>
+						<td style="border: 1px solid black;">Estado</td>
+					</tr>';
 
-	// print_r($arrayInfoJefes);
-
-	$tamInfoJefes = count($arrayInfoJefes);
-	$message = '<html><body><h2>ALERTA DE ACTIVIDADES EN SU DEPARTAMENTO</h2>';	
-	$message .= '<table border="0" cellpadding="20" cellspacing="0" width="1200" id="emailContainer" style=style="border: 1px solid black;">';
-	$message .= '<tr>
-					<td style="border: 1px solid black;">Indice</td>
-					<td style="border: 1px solid black;">Responsable</td>
-					<td style="border: 1px solid black;">Correo</td>
-					<td style="border: 1px solid black;">Actividad</td>
-					<td style="border: 1px solid black;">Fecha Limite</td>
-					<td style="border: 1px solid black;">Estado</td>
-				</tr>';
-	for($i = 0; $i < $tamInfoJefes; $i += 3)
-	{
-		$sqlMensaje = "select * from actividad where estado = 1 and iddepartamento = " . $arrayInfoJefes[$i];
+		# code...
+	
+		$sqlMensaje = "select * from actividad where estado = 1 and iddepartamento = " . $valor;
 		$resMensaje = query($sqlMensaje);
 		$numFilas = mysql_num_rows($resMensaje);
 		// echo $numFilas . "<br>";
@@ -82,8 +86,10 @@ function enviarMail(){
 				$actividadDescripcion = $filaMensaje['descripcion'];
 				$idResponsable = $filaMensaje['idpersona'];
 				$arrayResponsable = GetInfoResponsable($idResponsable);
+				// print_r($arrayResponsable);
 				$nombreResponsable = $arrayResponsable[0];
 				$correoResponsable = $arrayResponsable[1];
+				$correoJefeResponsable = $arrayResponsable[2];
 				$estado = 'Abierto';
 				if($filaMensaje['estado'] == 2)
 				{
@@ -105,19 +111,21 @@ function enviarMail(){
 			$message .= "</body></html>";
 			$mail->MsgHTML($message);		
 			$mail->ClearAddresses();
-			$mail->AddAddress($arrayInfoJefes[$i + 2],"ACTIVIDADES PENDIENTES");
+			$mail->AddAddress($correoJefeResponsable,"ACTIVIDADES PENDIENTES");
 			if(!$mail->Send()) 
 			{
 			  echo "Mailer Error: " . $mail->ErrorInfo;
 			  
-			} else 
+			} 
+			else 
 			{
 			//  echo "Message sent!";
 			  echo "Enviada Alerta";
 			} 	
 		}
-		
 	}
+		
+	
 
 		
 
@@ -125,7 +133,7 @@ function enviarMail(){
 
 function GetInfoResponsable($idResponsable)
 {
-	$sqlResponsable = "select nombre, apellido, correo from persona where idpersona = " . $idResponsable;
+	$sqlResponsable = "select nombre, apellido, correo, idpersonajefe from persona where idpersona = " . $idResponsable;
 	$resResponsable = query($sqlResponsable);
 	$nombres = '';
 	$arrayInfo = array();
@@ -133,11 +141,27 @@ function GetInfoResponsable($idResponsable)
 	{
 		$nombres = $filaResponsable['apellido'] . " " . $filaResponsable['nombre'];
 		$correo = $filaResponsable['correo'];
+		$idjefe = $filaResponsable['idpersonajefe'];
+		$correoJefe = GetInfoJefe($idjefe);
 		array_push($arrayInfo, $nombres);
 		array_push($arrayInfo, $correo);
+		array_push($arrayInfo, $correoJefe);
 	}
 	// print_r($arrayInfo);
 	return $arrayInfo;
+}
+
+function GetInfoJefe($idJefe)
+{
+	$sqlJefe = "select correo from persona where idpersona = '" . $idJefe . "'";
+	// echo $sqlJefe . "<br>";
+	$resJefe = query($sqlJefe);
+	$correoJefe = '';
+	while($filaJefe = mysql_fetch_array($resJefe))
+	{
+		$correoJefe = $filaJefe['correo'];
+	} 
+	return $correoJefe;
 }
 
 

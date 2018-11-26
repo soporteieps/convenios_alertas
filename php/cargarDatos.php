@@ -85,6 +85,8 @@ function CargarActividad()
 						<td>Responsable</td>
 						<td>Fecha Cumplimiento</td>
 						<td>Estado</td>
+						<td>Detalle</td>
+						<td>Observacion</td>
 						<td>Controles</td>";
 	$tablaResponse .= "</tr>";
 
@@ -104,11 +106,16 @@ function CargarActividad()
 		if($estadoActividad == 1)
 		{
 			$tableBody .= "<td>Abierto</td>";
-			$tableBody .= "<td><button id='". $filaConsulta['idactividad'] ."' onclick='CerrarActividad(" . $filaConsulta['idactividad'] . ")'>Cerrar</buttor></td>";
+			$tableBody .= "<td>" . $filaConsulta['descripcion'] . "</td>";
+			$tableBody .= "<td>" . $filaConsulta['observacion'] . "</td>";
+			$tableBody .= "<td><a href='#popup'><button type='button' id='". $filaConsulta['idactividad'] ."' onclick='SetIndicador(this.id)'>Cerrar</button></a></td>";
+			// <button id='". $filaConsulta['idactividad'] ."' onclick='CerrarActividad(" . $filaConsulta['idactividad'] . ")'>Cerrar</buttor>
 		}
 		if($estadoActividad == 2)
 		{
 			$tableBody .= "<td>Cerrado</td>";
+			$tableBody .= "<td>" . $filaConsulta['descripcion'] . "</td>";
+			$tableBody .= "<td>" . $filaConsulta['observacion'] . "</td>";
 			$tableBody .= "<td></td>";
 		}		
 		$tableBody .= "</tr>";
@@ -135,172 +142,10 @@ function GetResponsable($idResponsable)
 function CerrarActividad()
 {
 	$idactividad = $_POST['idActividad'];
-	$sqlActividad = "update actividad set estado = 2 where idActividad = " . $idactividad;
+	$observacionActividad = $_POST['observacionActividad'];
+	$sqlActividad = "update actividad set estado = 2, observacion = '" . $observacionActividad . "' where idActividad = " . $idactividad;
 	query($sqlActividad);
 	echo "Actividad Cerrada  -  Id Actividad = " . $idactividad;
 }
-// $instruccion = $_POST['instruccion'];
-// $anio = $_POST['anio'];
 
-// // determino la sentencia que se ejecutara dependiendo de la instruccion
-// if($instruccion == 'cargarIndicadorNuevo')
-// {
-// 	// Realizo la consulta de los indicadores a partir de la sigla del departamento
-// 	$sqlDept = "SELECT cod_indicador, indicador from indicador WHERE estado = 1 and departamento = '" . $siglasDept . "'" ;
-
-// 	$resIndicador = query($sqlDept);
-// 	$opcIndicadores = "";
-
-// 	while($fila = mysql_fetch_array($resIndicador))
-// 	{
-// 		$opcIndicadores .="<option value='" . $fila['cod_indicador'] . "'>" . $fila['indicador'] . "</option>";
-// 	} 
-
-// 	echo $opcIndicadores;
-// }
-
-// if($instruccion == 'borrar')
-// {
-// 	$codIndBorrar = $_POST['indicador'];
-
-// 	//tomar los indicadores antes de que se desactivar uno
-// 	$sqlNumInd = "select count(*) as numIndicadores from indicador where departamento = '" . $siglasDept . "' and estado = 1";
-
-// 	$resNumInd = query($sqlNumInd);
-// 	$totalNumInd = 0;
-
-// 	while($fila = mysql_fetch_array($resNumInd))
-// 	{
-// 		$totalNumInd = $fila['numIndicadores'];
-// 	}
-
-// 	//update del indicador
-// 	$sqlIndDept = "update indicador set estado = 0 where cod_indicador = " . $codIndBorrar . " and departamento = '". $siglasDept . "'";
-
-// 	$resCodBorrar = query($sqlIndDept);
-
-// 	$resNumInd = query($sqlNumInd);
-// 	$auxTotal = 0;
-
-// 	while($fila = mysql_fetch_array($resNumInd))
-// 	{
-// 		$auxTotal = $fila['numIndicadores'];
-// 	}
-
-// 	if($auxTotal == ($totalNumInd - 1))
-// 		echo 1;
-// 	else
-// 		echo 0;
-// }
-
-// if($instruccion == 'guardarValor')
-// {
-// 	/******************************************************
-// 	Se guarda los datos de metas programadas con respecto
-// 	a un indicador por zona y por mes
-// 	*******************************************************/
-
-// 	//se almacena los datos enviados de metas programadas
-// 	$valorEne = $_POST['valorIndicadorEne'];
-// 	$valorFeb = $_POST['valorIndicadorFeb'];
-// 	$valorMar = $_POST['valorIndicadorMar'];
-// 	$valorAbr = $_POST['valorIndicadorAbr'];
-// 	$valorMay = $_POST['valorIndicadorMay'];
-// 	$valorJun = $_POST['valorIndicadorJun'];
-// 	$valorJul = $_POST['valorIndicadorJul'];
-// 	$valorAgo = $_POST['valorIndicadorAgo'];
-// 	$valorSep = $_POST['valorIndicadorSep'];
-// 	$valorOct = $_POST['valorIndicadorOct'];
-// 	$valorNov = $_POST['valorIndicadorNov'];
-// 	$valorDic = $_POST['valorIndicadorDic'];
-
-// 	//recibe el codigo de indicador y de zona
-// 	$indicador = $_POST['selIndicador'];
-// 	$zona = $_POST['zona'];
-
-// 	//
-// 	$selIndZona = "select cod_indicador_zona from indicador_zona where cod_indicador = " . $indicador . " and cod_zona = " . $zona;
-
-// 	$resIndZona = query($selIndZona);
-// 	$codIndZona = 0;
-
-// 	//adquiero el codigo indicador zona
-// 	while($fila = mysql_fetch_array($resIndZona))
-// 	{
-// 		$codIndZona = $fila['cod_indicador_zona'];
-// 	}
-
-// 	$resAux = "";
-	
-// 	for($i = 0; $i < 12; $i++)
-// 	{
-
-// 		switch ($i) 
-// 		{
-// 			case 0:
-// 				$sql = "update indicador_zona_mes set meta_programada = " . $valorEne . " where cod_indicador_zona = " . $codIndZona . " and mes = 1 and anio_indicador = " . $anio;
-
-// 				$resAux = query($sql);
-// 				break;
-// 			case 1:
-// 				$sql = "update indicador_zona_mes set meta_programada = " . $valorFeb . " where cod_indicador_zona = " . $codIndZona . " and mes = 2 and anio_indicador = " . $anio;
-
-// 				$resAux = query($sql);
-// 				break;
-// 			case 2:
-// 				$sql = "update indicador_zona_mes set meta_programada = " . $valorMar . " where cod_indicador_zona = " . $codIndZona . " and mes = 3 and anio_indicador = " . $anio;
-
-// 				$resAux = query($sql);
-// 				break;
-// 			case 3:
-// 				$sql = "update indicador_zona_mes set meta_programada = " . $valorAbr . " where cod_indicador_zona = " . $codIndZona . " and mes = 4 and anio_indicador = " . $anio;
-
-// 				$resAux = query($sql);
-// 				break;
-// 			case 4:
-// 				$sql = "update indicador_zona_mes set meta_programada = " . $valorMay . " where cod_indicador_zona = " . $codIndZona . " and mes = 5 and anio_indicador = " . $anio;
-
-// 				$resAux = query($sql);
-// 				break;
-// 			case 5:
-// 				$sql = "update indicador_zona_mes set meta_programada = " . $valorJun . " where cod_indicador_zona = " . $codIndZona . " and mes = 6 and anio_indicador = " . $anio;
-
-// 				$resAux = query($sql);
-// 				break;
-// 			case 6:
-// 				$sql = "update indicador_zona_mes set meta_programada = " . $valorJul . " where cod_indicador_zona = " . $codIndZona . " and mes = 7 and anio_indicador = " . $anio;
-
-// 				$resAux = query($sql);
-// 				break;
-// 			case 7:
-// 				$sql = "update indicador_zona_mes set meta_programada = " . $valorAgo . " where cod_indicador_zona = " . $codIndZona . " and mes = 8 and anio_indicador = " . $anio;
-
-// 				$resAux = query($sql);
-// 				break;
-// 			case 8:
-// 				$sql = "update indicador_zona_mes set meta_programada = " . $valorSep . " where cod_indicador_zona = " . $codIndZona . " and mes = 9 and anio_indicador = " . $anio;
-
-// 				$resAux = query($sql);
-// 				break;
-// 			case 9:
-// 				$sql = "update indicador_zona_mes set meta_programada = " . $valorOct . " where cod_indicador_zona = " . $codIndZona . " and mes = 10 and anio_indicador = " . $anio;
-
-// 				$resAux = query($sql);
-// 				break;
-// 			case 10:
-// 				$sql = "update indicador_zona_mes set meta_programada = " . $valorNov . " where cod_indicador_zona = " . $codIndZona . " and mes = 11 and anio_indicador = " . $anio;
-
-// 				$resAux = query($sql);
-// 				break;
-// 			case 11:
-// 				$sql = "update indicador_zona_mes set meta_programada = " . $valorDic . " where cod_indicador_zona = " . $codIndZona . " and mes = 12 and anio_indicador = " . $anio;
-
-// 				$resAux = query($sql);
-// 				break;
-// 		}
-// 	}
-
-
-// 	echo $valorEne . "-" . $valorFeb . "-" . $valorMar . "-" . $valorAbr . "-" . $valorMay . "-" . $valorJun . "-" . $valorJul . "-" . $valorAgo . "-" . $valorSep . "-" . $valorOct . "-" . $valorNov . "-" . $valorDic . "******" . $indicador . "+++++" . $zona;
-// }
-// ?>
+?>

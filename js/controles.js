@@ -212,6 +212,10 @@ function IngresarActividad()
 		if(request.readyState == 4)
 		{			
 			alert(request.responseText);
+			selDepartamento.value = 0;
+			document.getElementById('actividad').value = '';
+			document.getElementById('fecha').value = '';
+			
 		}
 	}
 
@@ -220,16 +224,19 @@ function IngresarActividad()
 	
 }
 
-function CerrarActividad(idActividad)
+function CerrarActividad()
 {
 	// console.log(idActividad);
 	request = crearAjax();
+	idActividad = document.getElementById('actividadModificar').innerHTML;
+	observacionActividad = document.getElementById('textoObservacion').value;
 	
 	// console.log(actividad);
 
 	fdata = new FormData();
 	fdata.append('accion', 'cerrarActividad');
 	fdata.append('idActividad', idActividad);
+	fdata.append('observacionActividad', observacionActividad);
 	
 	request.open('POST', 'php/cargarDatos.php', true);
 
@@ -239,6 +246,8 @@ function CerrarActividad(idActividad)
 		{			
 			alert(request.responseText);
 			document.getElementById(idActividad).style.visibility = "hidden";
+			CargarActividades();
+
 		}
 	}
 
@@ -265,4 +274,10 @@ function AlertarActividades()
 	}
 
 	request.send();
+}
+
+function SetIndicador(id)
+{
+	document.getElementById('actividadModificar').innerHTML = id;
+	document.getElementById('textoObservacion').value = "";
 }

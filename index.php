@@ -4,12 +4,14 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Actividades IEPS</title>
+	<link href="https://fonts.googleapis.com/css?family=Niramit" rel="stylesheet"> 
 	<link rel="stylesheet" href="css/estilos.css">
 
 </head>
 <body>
-	<header id="header" class="">
-		<h1>Actividades IEPS</h1>		
+	<header id="header" class="">		
+		<img src="img/logo.png" alt="">		
+		<h1>Actividades IEPS</h1>
 	</header><!-- /header -->
 	<div id="alertar">
 		<button id="btAlertar">A L E R T A R!!!</button>
@@ -23,10 +25,10 @@
 			<option value="0">Elegir Departamento</option>
 		</select>
 		<div>
-			<label for="actividadAbierta">Abierta</label>			
-			<input type="radio" name="filtroActividad" id="actividadAbierta" value="1" >
-			<label for="actividadCerrada">Cerrada</label>
-			<input type="radio" name="filtroActividad" id="actividadCerrada" value="2">
+			<label for="actividadAbierta" style="visibility: hidden;">Abierta</label>			
+			<input type="radio" name="filtroActividad" id="actividadAbierta" value="1" style="visibility: hidden;">
+			<label for="actividadCerrada" style="visibility: hidden;">Cerrada</label>
+			<input type="radio" name="filtroActividad" id="actividadCerrada" value="2" style="visibility: hidden;">
 		</div>
 	</div>
 	<div id="divIngreso">
@@ -45,8 +47,17 @@
 		</div>		
 		<button id="btIngresoActividad">Ingresar Actividad</button>				
 		
-	</div>
+	</div>	
 	<div id="listaActividades"></div>
+	<div class="modal-wrapper" id="popup">
+		<div class="popup-contenedor">
+			<h2>Ingrese Observación</h2>
+			<textarea id="textoObservacion"></textarea>	
+			<a class="popup-cerrar" href="#">X</a>
+			<button type="button" onclick="CerrarActividad();">Guardar</button>
+		</div>
+	</div>
+	<span id="actividadModificar"></span>
 	<script src="js/controles.js" type="text/javascript"></script>
 </body>
 </html>
